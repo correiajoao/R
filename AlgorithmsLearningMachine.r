@@ -12,7 +12,7 @@ J48Pruned <- function(sourceFile){
   result <-J48(arffData$Classifier~., data= arffData, control= c("-C", "0.25", "-M", "2"))
   evaluation <- evaluate_Weka_classifier(result,cost = NULL, numFolds = 10, complexity = TRUE, seed = 1, class = TRUE)
   print(evaluation)
-  
+ 
 }
 
 J48Unpruned <- function(sourceFile){
@@ -282,6 +282,28 @@ vSVMSigmoid <- function(sourceFile){
   print(matrix_output)
 }
 
+SMOPolyKernel <- function(sourceFile){
+  
+  help.search(sourceFile)
+  arffData <- read.arff(file=sourceFile)
+  
+  result <-SMO(arffData$Classifier~., data= arffData,   Weka_control(K = list("weka.classifiers.functions.supportVector.RBFKernel", G = 2)))
+  evaluation <- evaluate_Weka_classifier(result,cost = NULL, numFolds = 10, complexity = TRUE, seed = 1, class = TRUE)
+  print(evaluation)
+  
+}
+
+SMORBFKernel <- function(sourceFile){
+  
+  help.search(sourceFile)
+  arffData <- read.arff(file=sourceFile)
+  
+  result <-SMO(arffData$Classifier~., data= arffData,   Weka_control(K = list("weka.classifiers.functions.supportVector.PolyKernel", G = 2)))
+  evaluation <- evaluate_Weka_classifier(result,cost = NULL, numFolds = 10, complexity = TRUE, seed = 1, class = TRUE)
+  print(evaluation)
+
+}
+
 #dataSet <- c("/home/joaolucas/AuthAlgorithms.arff","/home/joaolucas/Bypass.arff","/home/joaolucas/CrossSiteScripting.arff","/home/joaolucas/CSRF.arff","/home/joaolucas/DenialOfService.arff","/home/joaolucas/DirectoryTraversal.arff","/home/joaolucas/Doubt.arff","/home/joaolucas/ExecuteCode.arff","/home/joaolucas/FileInclusion.arff","/home/joaolucas/GainInformation.arff","/home/joaolucas/GainPrivileges.arff","/home/joaolucas/InformationDisclosure.arff","/home/joaolucas/InputHandling.arff","/home/joaolucas/MemoryCorruption.arff","/home/joaolucas/ObtainInformation.arff","/home/joaolucas/Overflow.arff","/home/joaolucas/Phishing.arff","/home/joaolucas/RaceCondition.arff","/home/joaolucas/Spoofing.arff","/home/joaolucas/XMLInjection.arff")
 dataSet <- c("/home/joaolucas/AuthAlgorithms.arff")
 
@@ -303,6 +325,12 @@ for(file in dataSet){
   
   print("============================================ RandomForest ============================================")
   RandomForest(file)
+  
+  print("============================================ SMOPolyKernel ============================================")
+  SMOPolyKernel(file)
+  
+  print("============================================ SMORBFKernel ============================================")
+  SMORBFKernel(file)
   
   print("============================================ C-SVMRadial ============================================")
   cSVMRadial(file)
